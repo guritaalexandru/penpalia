@@ -1,6 +1,21 @@
-import {connectToDatabase,} from '@/lib/mongodb';
+import {connectToDatabase,} from '@/lib/mongodb.js';
+import {DATABASE_COLLECTIONS,} from '@/js/utils/constants.js';
+import {postObject,} from '@/js/utils/mongoMethods.js';
 
-const getRouteCollection = async collectionName => {
+const getCollection = async collectionName => {
 	const {database,} = await connectToDatabase();
 	return database.collection(collectionName);
+};
+
+export const postCompletionEvent = async (requestMessagesArray, responseObject) => {
+	const routeCollection = await getCollection(DATABASE_COLLECTIONS.COMPLETION_EVENTS);
+
+	const completionEvent = {
+		model: responseObject.model,
+		usage: responseObject.usage,
+		response: responseObject.choices[0].message.content,
+		request: requestMessagesArray,
+	};
+
+	return postObject(routeCollection, completionEvent);
 };
