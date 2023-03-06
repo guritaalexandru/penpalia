@@ -1,37 +1,7 @@
-import {DESIRED_LANGUAGE,} from '@/js/utils/constants.js';
-
 import {sendBadRequest, sendMethodNotAllowed, sendOk,} from '@/js/utils/apiMethods.js';
 import {openai,} from '@/lib/openai.js';
 import {postCompletionEvent,} from '@/js/utils/calls.js';
-
-const SYSTEM_PROMPTS = {
-	YES_NO: {
-		'role': 'system',
-		'content': 'You only respond with YES or NO.',
-	},
-	SIMPLE_ASSISTANT: {
-		'role': 'system',
-		'content': 'You are a human talking with a friend.',
-	},
-};
-
-const generateCheckLanguagePrompt = input => {
-	return {
-		'role': 'user',
-		'content': `${PART_PROMPTS.LANGUAGE_CHECK} ${input}`,
-	};
-};
-
-const generateSimpleResponsePrompt = input => {
-	return {
-		'role': 'user',
-		'content': `${input}`,
-	};
-};
-
-const PART_PROMPTS = {
-	LANGUAGE_CHECK: `Is the next phrase in ${DESIRED_LANGUAGE}?`,
-};
+import {SYSTEM_PROMPTS, generateCheckLanguagePrompt, generateSimpleResponsePrompt,} from '@/js/utils/promptsUtils.js';
 
 const checkLanguage = async (res, input) => {
 	const messagesArray = [

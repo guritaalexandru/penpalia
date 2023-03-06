@@ -1,10 +1,10 @@
 import {connectToDatabase,} from '@/lib/mongodb.js';
-import {DATABASE_COLLECTIONS,} from '@/js/utils/constants.js';
+import {DATABASE_COLLECTIONS, DESIRED_LANGUAGE,} from '@/js/utils/constants.js';
 import {postObject,} from '@/js/utils/mongoMethods.js';
 
 const getCollection = async collectionName => {
 	const {database,} = await connectToDatabase();
-	return database.collection(collectionName);
+	return database.collection(`${collectionName}_${DESIRED_LANGUAGE}`);
 };
 
 export const postCompletionEvent = async (requestMessagesArray, responseObject) => {
