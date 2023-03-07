@@ -15,9 +15,10 @@ export const sendNotFound = (res, message) => {
 	);
 };
 
-export const sendBadRequest = (res, message) => {
+export const sendBadRequest = (res, type, message) => {
 	res.status(400).json(
 		{
+			'error_type': type,
 			'error': message,
 		}
 	);
