@@ -1,45 +1,34 @@
 import {sendBadRequest, sendMethodNotAllowed, sendOk,} from '@/js/utils/apiMethods.js';
-import {openai,} from '@/lib/openai.js';
-import {postCompletionEvent,} from '@/js/utils/calls.js';
 import {SYSTEM_PROMPTS, generateCheckLanguagePrompt, generateSimpleResponsePrompt,} from '@/js/utils/promptsUtils.js';
+import {chatCompletion,} from '@/js/utils/functions.js';
 
 const checkLanguage = async (res, input) => {
+	const CHECK_LANGUAGE_MAX_TOKENS = 5;
+
 	const messagesArray = [
 		SYSTEM_PROMPTS.YES_NO,
 		generateCheckLanguagePrompt(input)
 	];
 
-	const rawResponse = await openai.createChatCompletion({
-		model: 'gpt-3.5-turbo',
-		messages: messagesArray,
-		max_tokens: 5,
-	});
-
-	postCompletionEvent(messagesArray, rawResponse.data);
-
-	const textResponse = rawResponse.data.choices[0].message.content;
-	return textResponse.toLowerCase().includes('yes');
+	const response = await chatCompletion(messagesArray, CHECK_LANGUAGE_MAX_TOKENS);
+	const responseText = response?.message?.content;
+	return responseText.toLowerCase().includes('yes');
 };
 
 const converse = async (res, input) => {
+	const SIMPLE_CONVERSE_MAX_TOKENS = 50;
+
 	const messagesArray = [
 		SYSTEM_PROMPTS.SIMPLE_ASSISTANT,
 		generateSimpleResponsePrompt(input)
 	];
 
-	const response = await openai.createChatCompletion({
-		model: 'gpt-3.5-turbo',
-		messages: messagesArray,
-		max_tokens: 50,
-	});
-
-	postCompletionEvent(messagesArray, response.data);
-
-	return sendOk(res, response.data.choices[0]);
+	const response = await chatCompletion(messagesArray, SIMPLE_CONVERSE_MAX_TOKENS);
+	return sendOk(res, response);
 };
 
 export default async function handler(req, res) {
-	const isAllowedMethod = req.method === 'GET';
+	const isAllowedMethod = req.method === 'POST';
 	const inputText = req?.body?.input;
 
 	if (!inputText) {
@@ -49,7 +38,7 @@ export default async function handler(req, res) {
 		return sendMethodNotAllowed(res);
 	}
 
-	if(req.method === 'GET') {
+	if(req.method === 'POST') {
 		const isDesiredLanguage = await checkLanguage(res, inputText);
 		if(isDesiredLanguage) {
 			return converse(res, inputText);

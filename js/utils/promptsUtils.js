@@ -7,7 +7,7 @@ export const SYSTEM_PROMPTS = {
 	},
 	SIMPLE_ASSISTANT: {
 		'role': 'system',
-		'content': 'You are a human talking with a friend.',
+		'content': 'You are a human talking with a friend. You respond with simple sentences.',
 	},
 };
 
