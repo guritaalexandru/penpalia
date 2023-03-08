@@ -5,23 +5,33 @@ import {ERRORS,} from '@/js/utils/constants.js';
 
 const checkLanguage = async (res, input) => {
 	const CHECK_LANGUAGE_MAX_TOKENS = 5;
+	const MIN_TEMPERATURE = 0.1;
 
 	const messagesArray = [
 		SYSTEM_PROMPTS.YES_NO,
 		generateCheckLanguagePrompt(input)
 	];
 
-	const response = await chatCompletion(messagesArray, CHECK_LANGUAGE_MAX_TOKENS, 0.1);
+	const response = await chatCompletion(messagesArray, CHECK_LANGUAGE_MAX_TOKENS, MIN_TEMPERATURE);
 	const responseText = response?.message?.content;
 	return responseText.toLowerCase().includes('yes');
 };
 
 const converse = async (res, inputChat) => {
 	const SIMPLE_CONVERSE_MAX_TOKENS = 50;
+	const MAX_MEMORY = 3;
+	let userMessagesArray = [];
+
+	if(inputChat.length > MAX_MEMORY) {
+		userMessagesArray = inputChat.slice( -1 * MAX_MEMORY);
+	}
+	else {
+		userMessagesArray = inputChat;
+	}
 
 	const messagesArray = [
 		SYSTEM_PROMPTS.SIMPLE_ASSISTANT,
-		...inputChat
+		...userMessagesArray
 	];
 
 	const response = await chatCompletion(messagesArray, SIMPLE_CONVERSE_MAX_TOKENS);
