@@ -2,6 +2,7 @@ import React from 'react';
 import {DESIRED_LANGUAGE, ERRORS,} from '@/js/utils/constants.js';
 import {postAPICall,} from '@/js/utils/clientCalls.js';
 import MessagesBox from '@/js/components/Parts/MessagesBox.jsx';
+import {SYSTEM_PROMPTS,} from '@/js/utils/promptsUtils';
 
 const filterChatHistory = chatHistory => {
 	const filteredChatHistory = [];
@@ -70,8 +71,11 @@ export default function ChatComponent(props) {
 
 			const response = await postAPICall('/api/generate', {
 				messages: filteredChatHistory,
+				verifyLanguage: false,
+				type: SYSTEM_PROMPTS.MICHAEL_SCOTT.TYPE,
 			});
 			event.target.disabled = false;
+			event.target.focus();
 			console.log(response);
 
 			const responseMessageObject = buildResponseMessageObject(response);
