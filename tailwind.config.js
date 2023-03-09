@@ -22,6 +22,9 @@ module.exports = {
 			},
 			colors: {
 			},
+			maxWidth: {
+				'1440': '1440px',
+			},
 		},
 	},
 	plugins: [

@@ -29,7 +29,13 @@
 }
 
 @layer components {
-
+  /* Main container */
+  .main-layout {
+    @apply bg-white text-black min-h-screen;
+  }
+  .custom-container {
+    @apply mx-auto px-[16px] sm:px-[24px] max-w-1440;
+  }
 }
 
 @layer utilities {
