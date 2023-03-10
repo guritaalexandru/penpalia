@@ -1,5 +1,5 @@
 import React from 'react';
-import {DESIRED_LANGUAGE, ERRORS,} from '@/js/utils/constants.js';
+import {DESIRED_LANGUAGE, ENDPOINTS, ERRORS,} from '@/js/utils/constants.js';
 import {postAPICall,} from '@/js/utils/clientCalls.js';
 import MessagesBox from '@/js/components/Parts/MessagesBox.jsx';
 import {SYSTEM_PROMPTS,} from '@/js/utils/promptsUtils';
@@ -69,7 +69,7 @@ export default function ChatComponent(props) {
 			const currentChatHistory = [...chatMessages, currentMessageObject];
 			const filteredChatHistory = filterChatHistory(currentChatHistory);
 
-			const response = await postAPICall('/api/generate', {
+			const response = await postAPICall(ENDPOINTS.CONVERSE, {
 				messages: filteredChatHistory,
 				verifyLanguage: false,
 				type: SYSTEM_PROMPTS.MICHAEL_SCOTT.TYPE,

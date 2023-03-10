@@ -19,6 +19,15 @@ export const SYSTEM_PROMPTS = {
 		MAX_TOKENS: 50,
 		TYPE: 'simple_assistant',
 	},
+	SIMPLE_ASSISTANT_GENERATE_SENTENCE: {
+		MESSAGE: {
+			'role': 'system',
+			'content': 'You are a simple assistant. You respond with simple sentences.',
+		},
+		TEMPERATURE: 1,
+		MAX_TOKENS: 100,
+		TYPE: 'simple_assistant_generate_sentence',
+	},
 	MICHAEL_SCOTT: {
 		MESSAGE: {
 			'role': 'system',
@@ -30,14 +39,18 @@ export const SYSTEM_PROMPTS = {
 	},
 };
 
-export const PART_PROMPTS = {
-	LANGUAGE_CHECK: `Is the next phrase in ${DESIRED_LANGUAGE}?`,
-};
-
 export const generateCheckLanguagePrompt = input => {
 	return {
 		'role': 'user',
-		'content': `${PART_PROMPTS.LANGUAGE_CHECK} ${input}`,
+		'content': `Is the next phrase in ${DESIRED_LANGUAGE}? ${input}`,
+	};
+};
+
+export const generateSimpleSentenceWithWordsPrompt = inputArray => {
+	const input = inputArray.join(', ');
+	return {
+		'role': 'user',
+		'content': `Generate a sentence in ${DESIRED_LANGUAGE} including the following words: ${input}. Translate it to English.`,
 	};
 };
 
